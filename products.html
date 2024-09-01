@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Show</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100vh;
+            gap: 15px;
+        }
+
+        .card {
+            width: 23%;
+            background-color: aqua;
+            padding: 20px;
+            border-radius: 30px;
+            margin-top: 10px;
+            height: auto;
+        }
+
+        p {
+            padding: 4px;
+            letter-spacing: 0.5px;
+        }
+
+        img {
+            width: 96%;
+            height: 45vh;
+            border-radius: 10px;
+        }
+
+        .btn {
+            padding: 10px;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        button {
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        let myParam = parseInt(urlParams.get('id')-1);
+        console.log(myParam)
+        let products = JSON.parse(localStorage.getItem('products'));
+
+        let itamList = "";
+
+        itamList += `<div class="card" data-id="${products[myParam].id}">
+            <p><b>Title: </b>${products[myParam].title}</p>
+            <img src="${products[myParam].image}" alt="image" />
+            <p><b>Category: </b>${products[myParam].category}</p>
+            <p><b>Price: </b>${products[myParam].price}</p>
+            <div class="btn">
+            <button>Buy</button>
+            <button class="addTocartItams">Add To Cart</button>
+            </div>
+            </div>`;
+        document.querySelector('.container').innerHTML = itamList;
+        let button = document.querySelector('.addTocartItams');
+        button.addEventListener('click' , () =>{
+            let cartItems = JSON.parse(localStorage.getItem('cartItems')) || []; 
+            let productIds = new Set(cartItems.map(item => item.id));
+            
+            if(!(productIds.has(products[myParam].id-1))){
+                cartItems.push(
+                    {
+                        id: products[myParam].id-1,
+                        title : products[myParam].title,
+                        price : products[myParam].price,
+                        image : products[myParam].image,
+                        category : products[myParam].category
+                    }
+                );
+                localStorage.setItem('cartItems' , JSON.stringify(cartItems));
+            }else{
+                alert('Product already added to cart');
+            }
+        })
+        
+    </script>
+</body>
+
+</html>

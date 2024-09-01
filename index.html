@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+        integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-between;
+            background-color: rgb(209, 28, 28);
+            width: 100%;
+        }
+
+        .logo {
+            background-color: blue;
+            width: 10%;
+            height: 10vh;
+            margin: 10px;
+            border-radius: 15px;
+        }
+        .icon{
+            width: 20%;
+            height: 25vh;
+        }
+
+        .searchbox {
+            padding: 20px;
+        }
+
+        .searchBox {
+            height: 30px;
+            width: 250px;
+            background-color: aquamarine;
+            border: none;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #searchBoxId {
+            height: 100%;
+            width: 90%;
+            border: none;
+            background-color: transparent;
+            padding-left: 10px;
+            border-radius: 30px;
+        }
+
+        #searchBoxId:focus {
+            outline: none;
+        }
+
+        form button {
+            height: 100%;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            padding-right: 15px;
+        }
+
+        h1 {
+            font-weight: 400;
+        }
+
+        .categroyfild {
+            display: flex;
+            margin: 15px;
+            padding: 10px;
+            background-color: aquamarine;
+            border-radius: 30px;
+            gap: 10px;
+        }
+
+        .itam {
+            width: 100%;
+            height: 60%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-evenly;
+            gap: 20px;
+            margin: 10px;
+        }
+
+        .card {
+            background-color: aquamarine;
+            padding: 10px;
+            width: 20%;
+            transition: 0.8s;
+            border-radius: 10px;
+            margin-left: 5px;
+        }
+
+        .card:hover {
+            transition: 0.8s;
+            box-shadow: 0 5px 5px 2px;
+        }
+
+        img {
+            width: 100%;
+            height: 50vh;
+            border-radius: 10px;
+        }
+
+        p {
+            margin: 15px;
+        }
+
+        .priceSlider {
+            height: 6vh;
+            width: 15%;
+            background-color: aquamarine;
+            margin: 18px;
+            border-radius: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .slidecontainer {
+            padding-top: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cart {
+            background-color: aquamarine;
+            width: 6%;
+            height: 35%;
+            border-radius: 30px;
+            margin-top: 17px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .icon {
+            width: 100%;
+            height: 100%;
+            border-radius: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+        }
+        body{
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body >
+    <div class="container">
+        <div class="logo">
+            <img class="icon" src="image/icon.png" alt="">
+        </div>
+        <div class="searchbox">
+            <form class="searchBox" action="">
+                <input id="searchBoxId" type="text" class="srh" oninput="searchProducts()" placeholder="Search">
+                <button type="button"> <i class="fa-solid fa-magnifying-glass"></i></button>
+            </form>
+        </div>
+        <div class="selectBox">
+            <form class="categroyfild" action="#">
+                <input type="checkbox" name="check" id="checkbox1" value="men's clothing">
+                <label for="checkbox1">Men's</label>
+
+                <input type="checkbox" name="check" id="checkbox2" value="Women's clothing">
+                <label for="checkbox2">Women's</label>
+
+                <input type="checkbox" name="check" id="checkbox3" value="electronics">
+                <label for="checkbox3">Electronics</label>
+
+                <input type="checkbox" name="check" id="checkbox4" value="jewelery">
+                <label for="checkbox4">Jewelery</label>
+            </form>
+        </div>
+        <div class="priceSlider">
+            <div class="slidecontainer">
+                <input type="range" value="200" step="1" min="1" max="200" id="myRange"
+                    oninput="this.nextElementSibling.value = this.value">
+                <output>200 <span>$</span></output>
+            </div>
+        </div>
+        <div class="cart">
+            <div class="icon">
+                <a class="addtocartbtn"><i class="fa-solid fa-cart-shopping"></i></a>
+            </div>
+        </div>
+    </div>
+    <div class="itam">
+
+    </div>
+    <script>
+        let products = [];
+        async function getData() {
+            let data = await fetch("https://fakestoreapi.com/products");
+            data = await data.json();
+            products = data;
+            localStorage.setItem('products' , JSON.stringify(products));
+            displayProducts(data);
+        }
+
+        function displayProducts(data) {
+            let list = "";
+            for (let i = 0; i < data.length; i++) {
+                list += `<div class="card" data-id="${data[i].id}">
+            <p><b>Title:</b>  ${data[i].title}</p>
+            <img src="${data[i].image}" alt="">
+            <p><b>Price:</b>${data[i].price}$</p>
+            <p><b>Category:</b>${data[i].category}</p>
+            </div>`;
+            }
+            document.querySelector('.itam').innerHTML = list;
+            
+            let cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                card.addEventListener('click', function () {
+                    let productID = card.dataset.id;
+                    window.open('products.html?id= ' + productID, '_self');
+                })
+            })
+        }
+
+        function searchProducts() {
+            let searchValue = document.querySelector('.srh').value.toLowerCase();
+            let filteredProducts = products.filter(product => product.title.toLowerCase().includes(searchValue));
+            displayProducts(filteredProducts);
+        }
+
+
+        let checkboxes = document.querySelectorAll('.categroyfild');
+        checkboxes.forEach(checkb => {
+            checkb.addEventListener('change', checkMethod);
+        })
+
+        function checkMethod() {
+            let checkValue = Array.from(document.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value.toLowerCase());
+            if (checkValue.length > 0) {
+                let filteredProducts = products.filter(product => checkValue.includes(product.category.toLowerCase()));
+                displayProducts(filteredProducts);
+            } else {
+                displayProducts(products);
+            }
+        }
+
+        let rangeInput = document.getElementById('myRange');
+        rangeInput.addEventListener('change', () => {
+            let maxPrice = rangeInput.value;
+            let filteredProducts = products.filter(product => product.price <= maxPrice);
+            displayProducts(filteredProducts);
+        });
+
+        let addTocartButton=document.querySelector('.cart');
+        addTocartButton.addEventListener('click',function(){
+            window.open('cartPage.html' , '_self');
+        })
+        getData();
+    </script>
+</body>
+
+</html>
